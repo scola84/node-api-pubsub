@@ -8,7 +8,7 @@ export default class PubSub {
   }
 
   destroy() {
-    this._log('PubSub destroy()');
+    this._log('PubSub destroy');
 
     this._channels.forEach((channel) => {
       channel.destroy();
@@ -27,7 +27,7 @@ export default class PubSub {
   }
 
   channel(path) {
-    this._log('PubSub channel(%s)', path);
+    this._log('PubSub channel %s', path);
 
     if (!this._channels.has(path)) {
       this._channels
@@ -38,7 +38,7 @@ export default class PubSub {
   }
 
   open() {
-    this._log('PubSub open()');
+    this._log('PubSub open');
     if (this._connection) {
       this._connection.open();
     }

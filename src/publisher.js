@@ -14,7 +14,7 @@ export default class Publisher {
   }
 
   destroy() {
-    this._log('Publisher destroy()');
+    this._log('Publisher destroy');
 
     this._unbindRequest();
     this._unbindResponse();
@@ -71,7 +71,7 @@ export default class Publisher {
   }
 
   publish(data) {
-    this._log('Publisher publish(%s)', data);
+    this._log('Publisher publish %j', data);
 
     this._response.header('x-change', 1);
     this._response.write(data);

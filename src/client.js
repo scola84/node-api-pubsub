@@ -21,7 +21,7 @@ export default class Client {
   }
 
   destroy() {
-    this._log('Client destroy()');
+    this._log('Client destroy');
 
     this._unbindConnection();
     this._connection = null;
@@ -63,7 +63,7 @@ export default class Client {
   }
 
   publish(data) {
-    this._log('Client publish(%s)', data);
+    this._log('Client publish %s %j', this._path, data);
 
     const pubRequest = this._connection
       .request()
@@ -120,12 +120,12 @@ export default class Client {
   }
 
   _close() {
-    this._log('Client _close()');
+    this._log('Client _close %s', this._path);
     this._abort();
   }
 
   _open() {
-    this._log('Client _open()');
+    this._log('Client _open %s', this._path);
 
     if (this._subRequest) {
       return;
@@ -140,7 +140,7 @@ export default class Client {
   }
 
   _abort() {
-    this._log('Client _abort()');
+    this._log('Client _abort %s', this._path);
 
     if (this._subRequest) {
       this._unbindRequest();
@@ -154,7 +154,7 @@ export default class Client {
   }
 
   _data(data) {
-    this._log('Client _data(%s)', data);
+    this._log('Client _data %s %j', this._path, data);
     this._channel.up(data);
   }
 
@@ -165,6 +165,8 @@ export default class Client {
 
     this._subResponse = value;
     this._bindResponse();
+
+    this._log('Client _response %s', this._path);
 
     return this;
   }

@@ -6,14 +6,16 @@ import { debuglog } from 'util';
 export default class Channel {
   constructor() {
     this._log = debuglog('pubsub');
-
     this._path = null;
     this._client = null;
+
     this._lists = new Map();
     this._objects = new Map();
   }
 
   destroy() {
+    this._log('Channel destroy');
+
     if (this._client) {
       this._client.destroy();
       this._client = null;
@@ -57,6 +59,8 @@ export default class Channel {
     if (!this._lists.has(path)) {
       this._lists.set(path, new ListSubscription()
         .path(path));
+
+      this._log('Channel list %s (%s)', path, this._lists.size);
     }
 
     return this._lists.get(path);
@@ -66,6 +70,8 @@ export default class Channel {
     if (!this._objects.has(path)) {
       this._objects.set(path, new ObjectSubscription()
         .path(path));
+
+      this._log('Channel object %s (%s)', path, this._objects.size);
     }
 
     return this._objects.get(path);
@@ -82,7 +88,8 @@ export default class Channel {
   }
 
   up(data) {
-    this._log('Channel up(%s)', data);
+    this._log('Channel up %j (%s, %s)', data,
+      this._lists.size, this._objects.size);
 
     this._lists.forEach((list) => {
       list.publish(data);
@@ -94,7 +101,9 @@ export default class Channel {
   }
 
   down(data) {
-    this._log('Channel down(%s)', data);
+    this._log('Channel down %j (%s, %s)', data,
+      this._lists.size, this._objects.size);
+
     this._client.publish(data);
   }
 }
