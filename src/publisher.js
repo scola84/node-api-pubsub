@@ -73,8 +73,12 @@ export default class Publisher {
   publish(data) {
     this._log('Publisher publish %j', data);
 
-    this._response.header('x-change', 1);
-    this._response.write(data);
+    this._response
+      .status(200)
+      .header('x-change', 1)
+      .header('x-etag', false)
+      .header('x-total', false)
+      .write(data);
 
     return this;
   }
