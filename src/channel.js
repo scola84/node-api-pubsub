@@ -6,7 +6,9 @@ import { debuglog } from 'util';
 export default class Channel {
   constructor() {
     this._log = debuglog('pubsub');
+
     this._path = null;
+    this._cache = null;
     this._client = null;
 
     this._lists = new Map();
@@ -39,6 +41,15 @@ export default class Channel {
     }
 
     this._path = value;
+    return this;
+  }
+
+  cache(value = null) {
+    if (value === null) {
+      return this._cache;
+    }
+
+    this._cache = value;
     return this;
   }
 
@@ -90,6 +101,10 @@ export default class Channel {
   up(data) {
     this._log('Channel up %j (%s, %s)', data,
       this._lists.size, this._objects.size);
+
+    if (this._cache) {
+      this._cache.date(Date.now());
+    }
 
     this._lists.forEach((list) => {
       list.publish(data);
