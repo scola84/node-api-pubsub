@@ -43,6 +43,8 @@ export default class AbstractSubscription {
       .request(request)
       .response(response);
 
+    request.resume();
+
     this._log('Subscription subscribe %s (%s)', request.path(),
       this._publishers.size);
 
