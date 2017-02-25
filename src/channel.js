@@ -88,18 +88,18 @@ export default class Channel {
     return this._objects.get(path);
   }
 
-  publish(data) {
+  publish(path, data) {
     if (this._client) {
-      this.down(data);
+      this.down(path, data);
     } else {
-      this.up(data);
+      this.up(path, data);
     }
 
     return this;
   }
 
-  up(data) {
-    this._log('Channel up %j (%s, %s)', data,
+  up(path, data) {
+    this._log('Channel up %s %j (%s, %s)', path, data,
       this._lists.size, this._objects.size);
 
     if (this._cache) {
@@ -107,18 +107,18 @@ export default class Channel {
     }
 
     this._lists.forEach((list) => {
-      list.publish(data);
+      list.publish(path, data);
     });
 
     this._objects.forEach((object) => {
-      object.publish(data);
+      object.publish(path, data);
     });
   }
 
-  down(data) {
-    this._log('Channel down %j (%s, %s)', data,
+  down(path, data) {
+    this._log('Channel down %s %j (%s, %s)', path, data,
       this._lists.size, this._objects.size);
 
-    this._client.publish(data);
+    this._client.publish(path, data);
   }
 }
