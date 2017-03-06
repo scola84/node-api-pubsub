@@ -84,22 +84,30 @@ export default class Publisher {
   }
 
   _bindRequest() {
-    this._request.on('abort', this._handleAbort);
-    this._request.on('end', this._handleEnd);
-    this._request.on('error', this._handleError);
+    if (this._request) {
+      this._request.on('abort', this._handleAbort);
+      this._request.on('end', this._handleEnd);
+      this._request.on('error', this._handleError);
+    }
   }
 
   _unbindRequest() {
-    this._request.removeListener('abort', this._handleAbort);
-    this._request.removeListener('end', this._handleEnd);
-    this._request.removeListener('error', this._handleError);
+    if (this._request) {
+      this._request.removeListener('abort', this._handleAbort);
+      this._request.removeListener('end', this._handleEnd);
+      this._request.removeListener('error', this._handleError);
+    }
   }
 
   _bindResponse() {
-    this._response.on('error', this._handleError);
+    if (this._response) {
+      this._response.on('error', this._handleError);
+    }
   }
 
   _unbindResponse() {
-    this._response.removeListener('error', this._handleError);
+    if (this._response) {
+      this._response.removeListener('error', this._handleError);
+    }
   }
 }
