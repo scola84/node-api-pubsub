@@ -60,11 +60,12 @@ export default class Channel extends EventEmitter {
   }
 
   list(path, action = true) {
-    this._log('Channel list %s %s (%d)',
-      path, action, this._lists.size);
-
     if (action === false) {
       this._lists.delete(path);
+
+      this._log('Channel delete list %s (%d)',
+        path, this._lists.size);
+
       return this;
     }
 
@@ -72,17 +73,21 @@ export default class Channel extends EventEmitter {
       this._lists.set(path, new ListSubscription()
         .channel(this)
         .path(path));
+
+      this._log('Channel set list %s (%d)',
+        path, this._lists.size);
     }
 
     return this._lists.get(path);
   }
 
   object(path, action = true) {
-    this._log('Channel object %s %s (%d)',
-      path, action, this._objects.size);
-
     if (action === false) {
       this._objects.delete(path);
+
+      this._log('Channel delete object %s (%d)',
+        path, this._objects.size);
+
       return this;
     }
 
@@ -90,6 +95,9 @@ export default class Channel extends EventEmitter {
       this._objects.set(path, new ObjectSubscription()
         .channel(this)
         .path(path));
+
+      this._log('Channel set object %s (%d)',
+        path, this._objects.size);
     }
 
     return this._objects.get(path);
