@@ -1,12 +1,12 @@
 import AbstractSubscription from './abstract';
 
 export default class ListSubscription extends AbstractSubscription {
-  publish(path, data) {
-    this._log('ListSubscription publish %s %j (%s)',
-      path, data, this._path);
+  publish(data, connection) {
+    this._log('ListSubscription publish %j (%s)',
+      data, this._path);
 
     this._publishers.forEach((publisher) => {
-      publisher.publish(data);
+      publisher.publish(data, connection);
     });
 
     return this;

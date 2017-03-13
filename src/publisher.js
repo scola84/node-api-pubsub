@@ -70,8 +70,12 @@ export default class Publisher {
     return this;
   }
 
-  publish(data) {
+  publish(data, connection) {
     this._log('Publisher publish %j', data);
+
+    if (this._response.connection() === connection) {
+      return this;
+    }
 
     this._response
       .status(200)

@@ -60,4 +60,8 @@ export default class AbstractSubscription {
 
     return this;
   }
+
+  publish() {
+    throw new Error('Not implemented');
+  }
 }

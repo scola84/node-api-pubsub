@@ -62,19 +62,15 @@ export default class Client {
     return this;
   }
 
-  publish(path, data) {
-    this._log('Client publish %s %j (%s)',
-      path, data, this._path);
+  publish(data) {
+    this._log('Client publish %j (%s)', data, this._path);
 
     const pubRequest = this._connection
       .request()
       .path(this._path)
       .method('POST');
 
-    pubRequest.end({
-      path,
-      data
-    });
+    pubRequest.end(data);
   }
 
   _bindConnection() {
@@ -159,7 +155,7 @@ export default class Client {
 
   _data(data) {
     this._log('Client _data %j (%s)', data, this._path);
-    this._channel.up(data.path, data.data);
+    this._channel.up(data, this._connection);
   }
 
   _response(value = null) {

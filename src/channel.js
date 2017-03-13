@@ -1,14 +1,16 @@
+import EventEmitter from 'events';
+import { debuglog } from 'util';
 import Client from './client';
 import ListSubscription from './list';
 import ObjectSubscription from './object';
-import { debuglog } from 'util';
 
-export default class Channel {
+export default class Channel extends EventEmitter {
   constructor() {
+    super();
+
     this._log = debuglog('pubsub');
 
     this._path = null;
-    this._cache = null;
     this._client = null;
 
     this._lists = new Map();
@@ -41,15 +43,6 @@ export default class Channel {
     }
 
     this._path = value;
-    return this;
-  }
-
-  cache(value = null) {
-    if (value === null) {
-      return this._cache;
-    }
-
-    this._cache = value;
     return this;
   }
 
@@ -88,37 +81,38 @@ export default class Channel {
     return this._objects.get(path);
   }
 
-  publish(path, data) {
+  publish(data, connection = null) {
     if (this._client) {
-      this.down(path, data);
-    } else {
-      this.up(path, data);
+      this.down(data);
     }
+
+    return this.up(data, connection);
+  }
+
+  up(data, connection) {
+    this._log('Channel up %j (%s, %s)', data,
+      this._lists.size, this._objects.size);
+
+    if (connection) {
+      this.emit('publish', data);
+    }
+
+    this._lists.forEach((list) => {
+      list.publish(data, connection);
+    });
+
+    this._objects.forEach((object) => {
+      object.publish(data, connection);
+    });
 
     return this;
   }
 
-  up(path, data) {
-    this._log('Channel up %s %j (%s, %s)', path, data,
+  down(data) {
+    this._log('Channel down %j (%s, %s)', data,
       this._lists.size, this._objects.size);
 
-    if (this._cache) {
-      this._cache.date(Date.now());
-    }
-
-    this._lists.forEach((list) => {
-      list.publish(path, data);
-    });
-
-    this._objects.forEach((object) => {
-      object.publish(path, data);
-    });
-  }
-
-  down(path, data) {
-    this._log('Channel down %s %j (%s, %s)', path, data,
-      this._lists.size, this._objects.size);
-
-    this._client.publish(path, data);
+    this._client.publish(data);
+    return this;
   }
 }

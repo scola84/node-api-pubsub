@@ -39,6 +39,7 @@ export default class PubSub {
 
   open() {
     this._log('PubSub open');
+
     if (this._connection) {
       this._connection.open();
     }
