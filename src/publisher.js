@@ -79,8 +79,8 @@ export default class Publisher {
 
     this._response
       .status(200)
-      .header('x-change', 1)
       .header('x-etag', false)
+      .header('x-publish', 1)
       .header('x-total', false)
       .write(data);
 
