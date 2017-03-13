@@ -11,4 +11,12 @@ export default class ListSubscription extends AbstractSubscription {
 
     return this;
   }
+
+  unsubscribe(request) {
+    super.unsubscribe(request);
+
+    if (this._publishers.size === 0) {
+      this._channel.list(this._path, false);
+    }
+  }
 }

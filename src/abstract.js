@@ -5,7 +5,9 @@ export default class AbstractSubscription {
   constructor() {
     this._log = debuglog('pubsub');
 
+    this._channel = null;
     this._path = null;
+
     this._publishers = new Map();
   }
 
@@ -17,6 +19,15 @@ export default class AbstractSubscription {
     });
 
     this._publishers.clear();
+  }
+
+  channel(value = null) {
+    if (value === null) {
+      return this._channel;
+    }
+
+    this._channel = value;
+    return this;
   }
 
   path(value = null) {
@@ -45,8 +56,8 @@ export default class AbstractSubscription {
 
     request.resume();
 
-    this._log('Subscription subscribe %s (%s)', request.path(),
-      this._publishers.size);
+    this._log('Subscription subscribe %s (%s)',
+      request.path(), this._publishers.size);
 
     return this;
   }
@@ -55,8 +66,8 @@ export default class AbstractSubscription {
     const connection = request.connection();
     this._publishers.delete(connection);
 
-    this._log('Subscription unsubscribe %s (%s)', request.path(),
-      this._publishers.size);
+    this._log('Subscription unsubscribe %s (%s)',
+      request.path(), this._publishers.size);
 
     return this;
   }

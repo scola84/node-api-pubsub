@@ -59,34 +59,50 @@ export default class Channel extends EventEmitter {
     return this;
   }
 
-  list(path) {
+  list(path, action = true) {
+    this._log('Channel list %s %s (%d)',
+      path, action, this._lists.size);
+
+    if (action === false) {
+      this._lists.delete(path);
+      return this;
+    }
+
     if (!this._lists.has(path)) {
       this._lists.set(path, new ListSubscription()
+        .channel(this)
         .path(path));
-
-      this._log('Channel list %s (%s)', path, this._lists.size);
     }
 
     return this._lists.get(path);
   }
 
-  object(path) {
+  object(path, action = true) {
+    this._log('Channel object %s %s (%d)',
+      path, action, this._objects.size);
+
+    if (action === false) {
+      this._objects.delete(path);
+      return this;
+    }
+
     if (!this._objects.has(path)) {
       this._objects.set(path, new ObjectSubscription()
+        .channel(this)
         .path(path));
-
-      this._log('Channel object %s (%s)', path, this._objects.size);
     }
 
     return this._objects.get(path);
   }
 
   publish(data, connection = null) {
+    this.up(data, connection);
+
     if (this._client) {
       this.down(data);
     }
 
-    return this.up(data, connection);
+    return this;
   }
 
   up(data, connection) {
