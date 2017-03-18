@@ -5,6 +5,6 @@
   "repository": "github:scola84/node-api-pubsub",
   "author": "M.C. van den Boogaart <scola@kvdb.name>",
   "license": "MIT",
-  "main": "./dist/api-pubsub.js",
-  "jsnext:main": "index.js"
+  "main": "./index.js",
+  "jsnext:main": "./index.js"
 }
