@@ -1,13 +1,12 @@
 import Publisher from './publisher';
 import { debuglog } from 'util';
 
-export default class AbstractSubscription {
+export default class Subscription {
   constructor() {
     this._log = debuglog('pubsub');
 
     this._channel = null;
     this._path = null;
-
     this._publishers = new Map();
   }
 
@@ -27,6 +26,15 @@ export default class AbstractSubscription {
     }
 
     this._channel = value;
+    return this;
+  }
+
+  mode(value = null) {
+    if (value === null) {
+      return this._mode;
+    }
+
+    this._mode = value;
     return this;
   }
 
@@ -66,13 +74,32 @@ export default class AbstractSubscription {
     const connection = request.connection();
     this._publishers.delete(connection);
 
+    if (this._publishers.size === 0) {
+      this._channel.subscription(this._path, false);
+    }
+
     this._log('Subscription unsubscribe %s (%s)',
       request.path(), this._publishers.size);
 
     return this;
   }
 
-  publish() {
-    throw new Error('Not implemented');
+  publish(data, connection) {
+    this._log('Subscription publish %j (%s, %s)',
+      data, this._mode, this._path);
+
+    const cancel = this._mode === 'object' &&
+      data.path &&
+      data.path !== this._path;
+
+    if (cancel) {
+      return this;
+    }
+
+    this._publishers.forEach((publisher) => {
+      publisher.publish(data, connection);
+    });
+
+    return this;
   }
 }

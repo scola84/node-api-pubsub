@@ -1,7 +1,7 @@
 import Channel from './channel';
 import { debuglog } from 'util';
 
-export default class PubSub {
+export default class PubSubFactory {
   constructor() {
     this._log = debuglog('pubsub');
     this._channels = new Map();
@@ -26,7 +26,7 @@ export default class PubSub {
     return this;
   }
 
-  channel(path) {
+  create(path) {
     this._log('PubSub channel %s', path);
 
     if (!this._channels.has(path)) {
