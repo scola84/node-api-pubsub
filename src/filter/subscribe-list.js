@@ -5,6 +5,11 @@ export default function subscribeList(channel) {
       return;
     }
 
+    if (!request.datum('list')) {
+      next();
+      return;
+    }
+
     channel
       .list(request.path())
       .subscribe(request, response);

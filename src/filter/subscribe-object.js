@@ -5,6 +5,11 @@ export default function subscribeObject(channel) {
       return;
     }
 
+    if (!request.datum('object')) {
+      next();
+      return;
+    }
+
     channel
       .object(request.path())
       .subscribe(request, response);
