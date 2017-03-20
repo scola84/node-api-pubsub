@@ -1,8 +1,8 @@
 import PubSubFactory from './src/factory';
-import publish from './src/helper/publish';
-import subscribe from './src/helper/subscribe-list';
-import subscribeList from './src/helper/subscribe-list';
-import subscribeObject from './src/helper/subscribe-object';
+import publish from './src/filter/publish';
+import subscribe from './src/filter/subscribe-list';
+import subscribeList from './src/filter/subscribe-list';
+import subscribeObject from './src/filter/subscribe-object';
 
 export {
   PubSubFactory,
