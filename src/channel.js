@@ -104,7 +104,7 @@ export default class Channel extends EventEmitter {
     return this;
   }
 
-  up(data, connection) {
+  up(data, connection = null) {
     this._log('Channel up %j (%s)', data,
       this._subscriptions.size);
 

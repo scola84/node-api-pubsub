@@ -155,7 +155,7 @@ export default class Client {
 
   _data(data) {
     this._log('Client _data %j (%s)', data, this._path);
-    this._channel.up(data, this._connection);
+    this._channel.up(data);
   }
 
   _response(value = null) {

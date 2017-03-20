@@ -84,7 +84,7 @@ export default class Subscription {
     return this;
   }
 
-  publish(data, connection) {
+  publish(data, connection = null) {
     this._log('Subscription publish %j (%s, %s)',
       data, this._mode, this._path);
 
