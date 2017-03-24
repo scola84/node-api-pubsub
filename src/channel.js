@@ -83,7 +83,7 @@ export default class Channel extends EventEmitter {
       return this;
     }
 
-    if (!this._subscriptions.has(path)) {
+    if (this._subscriptions.has(path) === false) {
       this._subscriptions.set(path, this._subscription(path));
 
       this._log('Channel set subscription %s (%d)',
