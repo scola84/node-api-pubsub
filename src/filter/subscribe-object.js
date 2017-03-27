@@ -1,11 +1,10 @@
 export default function subscribeObject(channel) {
   return (request, response, next) => {
-    if (!request.header('x-more')) {
-      next();
-      return;
-    }
+    const cancel =
+      Number(request.header('x-more')) === 0 ||
+      request.datum('object') === null;
 
-    if (!request.datum('object')) {
+    if (cancel === true) {
       next();
       return;
     }

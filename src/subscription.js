@@ -51,7 +51,7 @@ export default class Subscription {
     const connection = request.connection();
     let publisher = this._publishers.get(connection);
 
-    if (!publisher) {
+    if (publisher instanceof Publisher === false) {
       publisher = new Publisher()
         .subscription(this);
 
@@ -88,11 +88,12 @@ export default class Subscription {
     this._log('Subscription publish %j (%s, %s)',
       data, this._mode, this._path);
 
-    const cancel = this._mode === 'object' &&
-      data.path &&
+    const cancel =
+      this._mode === 'object' &&
+      typeof data.path === 'string' &&
       data.path !== this._path;
 
-    if (cancel) {
+    if (cancel === true) {
       return this;
     }
 

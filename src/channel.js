@@ -54,7 +54,7 @@ export default class Channel extends EventEmitter {
   list(path) {
     let subscription = this._subscriptions.get(path);
 
-    if (!subscription) {
+    if (subscription instanceof Subscription === false) {
       subscription = this.subscription(path)
         .mode('list');
     }
@@ -65,7 +65,7 @@ export default class Channel extends EventEmitter {
   object(path) {
     let subscription = this._subscriptions.get(path);
 
-    if (!subscription) {
+    if (subscription instanceof Subscription === false) {
       subscription = this.subscription(path)
         .mode('object');
     }

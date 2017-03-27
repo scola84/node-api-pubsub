@@ -1,11 +1,10 @@
 export default function subscribeList(channel) {
   return (request, response, next) => {
-    if (!request.header('x-more')) {
-      next();
-      return;
-    }
+    const cancel =
+      Number(request.header('x-more')) === 0 ||
+      request.datum('list') === null;
 
-    if (!request.datum('list')) {
+    if (cancel === true) {
       next();
       return;
     }
