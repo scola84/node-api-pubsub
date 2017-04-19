@@ -1,5 +1,5 @@
-import Channel from './channel';
 import { debuglog } from 'util';
+import Channel from './channel';
 
 export default class PubSubFactory {
   constructor() {

@@ -1,5 +1,5 @@
-import Publisher from './publisher';
 import { debuglog } from 'util';
+import Publisher from './publisher';
 
 export default class Subscription {
   constructor() {
