@@ -20,13 +20,8 @@ export default class Publisher {
     this._unbindResponse();
 
     this._subscription.unsubscribe(this._request);
-    this._subscription = null;
-
     this._request.destroy();
-    this._request = null;
-
     this._response.destroy();
-    this._response = null;
   }
 
   subscription(value = null) {

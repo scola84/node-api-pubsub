@@ -24,13 +24,8 @@ export default class Client {
     this._log('Client destroy');
 
     this._unbindConnection();
-    this._connection = null;
-
     this._unbindRequest();
-    this._subRequest = null;
-
     this._unbindResponse();
-    this._subResponse = null;
   }
 
   channel(value = null) {
