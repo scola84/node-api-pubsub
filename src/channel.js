@@ -77,7 +77,7 @@ export default class Channel extends EventEmitter {
     if (action === false) {
       this._subscriptions.delete(path);
 
-      this._log('Channel delete subscription %s (%d)',
+      this._log('Channel delete subscription path=%s #sub=%d',
         path, this._subscriptions.size);
 
       return this;
@@ -86,7 +86,7 @@ export default class Channel extends EventEmitter {
     if (this._subscriptions.has(path) === false) {
       this._subscriptions.set(path, this._subscription(path));
 
-      this._log('Channel set subscription %s (%d)',
+      this._log('Channel set subscription path=%s #sub=%d',
         path, this._subscriptions.size);
     }
 
@@ -105,7 +105,7 @@ export default class Channel extends EventEmitter {
   }
 
   up(data, connection = null) {
-    this._log('Channel up %j (%s)', data,
+    this._log('Channel up data=%j #sub=%s', data,
       this._subscriptions.size);
 
     this._subscriptions.forEach((subscription) => {
@@ -116,7 +116,7 @@ export default class Channel extends EventEmitter {
   }
 
   down(data) {
-    this._log('Channel down %j', data);
+    this._log('Channel down data=%j', data);
 
     this._client.publish(data);
     return this;

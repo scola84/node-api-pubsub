@@ -27,7 +27,7 @@ export default class PubSubFactory {
   }
 
   create(path) {
-    this._log('PubSub channel %s', path);
+    this._log('PubSub channel path=%s', path);
 
     if (this._channels.has(path) === false) {
       this._channels

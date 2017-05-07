@@ -64,7 +64,7 @@ export default class Subscription {
 
     request.resume();
 
-    this._log('Subscription subscribe %s (%s)',
+    this._log('Subscription subscribe path=%s #pub=%d',
       request.path(), this._publishers.size);
 
     return this;
@@ -78,14 +78,14 @@ export default class Subscription {
       this._channel.subscription(this._path, false);
     }
 
-    this._log('Subscription unsubscribe %s (%s)',
+    this._log('Subscription unsubscribe path=%s #pub=%d',
       request.path(), this._publishers.size);
 
     return this;
   }
 
   publish(data, connection = null) {
-    this._log('Subscription publish %j (%s, %s)',
+    this._log('Subscription publish data=%j mode=%s path=%s',
       data, this._mode, this._path);
 
     const cancel =

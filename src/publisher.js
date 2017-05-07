@@ -71,7 +71,7 @@ export default class Publisher {
   }
 
   publish(data, connection = null) {
-    this._log('Publisher publish %j', data);
+    this._log('Publisher publish data=%j', data);
 
     if (this._response.connection() === connection) {
       return this;
