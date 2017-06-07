@@ -1,7 +1,11 @@
-export default function publish(channel) {
+export default function publish(server) {
+  const pubsub = server.pubsub();
+
   return (request) => {
     request.once('data', (data) => {
-      channel.publish(data, request.connection());
+      pubsub
+        .channel(request.path())
+        .publish(data, request.connection());
     });
   };
 }

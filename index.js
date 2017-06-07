@@ -1,13 +1,9 @@
-import PubSubFactory from './src/factory';
+import PubSub from './src/pubsub';
 import publish from './src/filter/publish';
-import subscribe from './src/filter/subscribe-list';
-import subscribeList from './src/filter/subscribe-list';
-import subscribeObject from './src/filter/subscribe-object';
+import subscribe from './src/filter/subscribe';
 
 export {
-  PubSubFactory,
+  PubSub,
   publish,
-  subscribe,
-  subscribeList,
-  subscribeObject
+  subscribe
 };

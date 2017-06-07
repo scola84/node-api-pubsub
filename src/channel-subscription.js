@@ -1,10 +1,9 @@
 import { debuglog } from 'util';
-
-export default class Publisher {
+export default class ChannelSubscription {
   constructor() {
     this._log = debuglog('pubsub');
 
-    this._subscription = null;
+    this._channel = null;
     this._request = null;
     this._response = null;
 
@@ -14,22 +13,23 @@ export default class Publisher {
   }
 
   destroy() {
-    this._log('Publisher destroy');
+    this._log('ChannelSubscription destroy');
 
     this._unbindRequest();
     this._unbindResponse();
 
-    this._subscription.unsubscribe(this._request);
     this._request.destroy();
     this._response.destroy();
+
+    this._channel.unsubscribe(this._request);
   }
 
-  subscription(value = null) {
+  channel(value = null) {
     if (value === null) {
-      return this._subscription;
+      return this._channel;
     }
 
-    this._subscription = value;
+    this._channel = value;
     return this;
   }
 
@@ -65,8 +65,8 @@ export default class Publisher {
     return this;
   }
 
-  publish(data, connection = null) {
-    this._log('Publisher publish data=%j', data);
+  publish(data, connection) {
+    this._log('ChannelSubscription publish data=%j', data);
 
     if (this._response.connection() === connection) {
       return this;

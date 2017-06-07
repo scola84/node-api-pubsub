@@ -1,26 +1,14 @@
-import EventEmitter from 'events';
 import { debuglog } from 'util';
-import Client from './client';
-import Subscription from './subscription';
+import ChannelSubscription from './channel-subscription';
 
-export default class Channel extends EventEmitter {
+export default class Channel {
   constructor() {
-    super();
-
     this._log = debuglog('pubsub');
-
-    this._client = null;
-    this._path = null;
     this._subscriptions = new Map();
   }
 
   destroy() {
     this._log('Channel destroy');
-
-    if (this._client) {
-      this._client.destroy();
-      this._client = null;
-    }
 
     this._subscriptions.forEach((subscription) => {
       subscription.destroy();
@@ -29,105 +17,46 @@ export default class Channel extends EventEmitter {
     this._subscriptions.clear();
   }
 
-  path(value = null) {
-    if (value === null) {
-      return this._path;
+  subscribe(request, response) {
+    const connection = request.connection();
+    let subscription = this._subscriptions.get(connection);
+
+    if (subscription instanceof ChannelSubscription === false) {
+      subscription = new ChannelSubscription()
+        .channel(this);
+
+      this._subscriptions.set(connection, subscription);
     }
 
-    this._path = value;
-    return this;
-  }
+    subscription
+      .request(request)
+      .response(response);
 
-  client(value = null) {
-    if (value === null) {
-      return this._client;
-    }
+    request.resume();
 
-    this._client = new Client()
-      .path(this._path)
-      .channel(this)
-      .connection(value);
-
-    return this;
-  }
-
-  list(path) {
-    let subscription = this._subscriptions.get(path);
-
-    if (subscription instanceof Subscription === false) {
-      subscription = this.subscription(path)
-        .mode('list');
-    }
-
-    return subscription;
-  }
-
-  object(path) {
-    let subscription = this._subscriptions.get(path);
-
-    if (subscription instanceof Subscription === false) {
-      subscription = this.subscription(path)
-        .mode('object');
-    }
-
-    return subscription;
-  }
-
-  subscription(path, action = true) {
-    if (action === false) {
-      this._subscriptions.delete(path);
-
-      this._log('Channel delete subscription path=%s #sub=%d',
-        path, this._subscriptions.size);
-
-      return this;
-    }
-
-    if (this._subscriptions.has(path) === false) {
-      this._subscriptions.set(path, this._subscription(path));
-
-      this._log('Channel set subscription path=%s #sub=%d',
-        path, this._subscriptions.size);
-    }
-
-    return this._subscriptions.get(path);
-  }
-
-  publish(data, connection = null) {
-    this.emit('publish', data);
-    this.up(data, connection);
-
-    if (this._client) {
-      this.down(data);
-    }
-
-    return this;
-  }
-
-  up(data, connection = null) {
-    this._log('Channel up data=%j #sub=%s', data,
+    this._log('Channel subscribe path=%s #sub=%d',
+      request.path(),
       this._subscriptions.size);
+
+    return this;
+  }
+
+  unsubscribe(request) {
+    this._subscriptions.delete(request.connection());
+
+    this._log('Channel unsubscribe path=%s #sub=%d',
+      request.path(),
+      this._subscriptions.size);
+
+    return this;
+  }
+
+  publish(data, connection) {
+    this._log('Channel publish data=%j #sub=%d',
+      data, this._subscriptions.size);
 
     this._subscriptions.forEach((subscription) => {
       subscription.publish(data, connection);
     });
-
-    return this;
-  }
-
-  down(data) {
-    this._log('Channel down data=%j', data);
-
-    this._client.publish(data);
-    return this;
-  }
-
-  _subscription(path) {
-    const subscription = new Subscription();
-
-    subscription.channel(this);
-    subscription.path(path);
-
-    return subscription;
   }
 }
