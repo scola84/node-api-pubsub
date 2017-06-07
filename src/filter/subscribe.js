@@ -1,6 +1,4 @@
-export default function subscribe(server) {
-  const pubsub = server.pubsub();
-
+export default function subscribe(pubsub) {
   return (request, response, next) => {
     const cancel =
       Number(request.header('x-more')) === 0 ||

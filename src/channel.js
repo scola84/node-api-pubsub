@@ -51,12 +51,12 @@ export default class Channel {
     return this;
   }
 
-  publish(data, connection) {
+  publish(data) {
     this._log('Channel publish data=%j #sub=%d',
       data, this._subscriptions.size);
 
     this._subscriptions.forEach((subscription) => {
-      subscription.publish(data, connection);
+      subscription.publish(data);
     });
   }
 }

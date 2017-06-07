@@ -65,12 +65,8 @@ export default class ChannelSubscription {
     return this;
   }
 
-  publish(data, connection) {
+  publish(data) {
     this._log('ChannelSubscription publish data=%j', data);
-
-    if (this._response.connection() === connection) {
-      return this;
-    }
 
     this._response
       .status(200)
