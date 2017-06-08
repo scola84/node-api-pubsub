@@ -3,7 +3,7 @@ export default function filterPublish(pubsub) {
     request.once('data', (data) => {
       pubsub
         .channel(request.path())
-        .publish(data, request.connection());
+        .publish(data);
     });
   };
 }
