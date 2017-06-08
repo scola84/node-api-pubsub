@@ -1,11 +1,6 @@
 export default function subscribe(pubsub) {
   return (request, response, next) => {
-    const cancel =
-      Number(request.header('x-more')) === 0 ||
-      request.datum('list') === null &&
-      request.datum('object') === null;
-
-    if (cancel === true) {
+    if (Number(request.header('x-more')) === 0) {
       next();
       return;
     }
