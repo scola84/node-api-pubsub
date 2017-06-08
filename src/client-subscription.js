@@ -17,7 +17,7 @@ export default class ClientSubscription {
     this._handleAbort = () => this._abort();
     this._handleData = (d) => this._data(d);
     this._handleError = () => {};
-    this._handleResponse = (r) => this._response(r);
+    this._handleResponse = (r) => this._res(r);
   }
 
   destroy() {
@@ -43,8 +43,9 @@ export default class ClientSubscription {
     }
 
     this._connection = value;
+    this._bindConnection();
 
-    if (this._connection.writable() === true) {
+    if (this._connection.connected() === true) {
       this._open();
     }
 
@@ -151,20 +152,16 @@ export default class ClientSubscription {
   }
 
   _data(data) {
-    this._log('ClientSubscription _data data=%j path=%s',
+    this._log('ClientSubscription _data  path=%s data=%j',
       data, this._path);
-    this._client.emit('publish', data);
+    this._client.emit('publish', this._path, data);
   }
 
-  _response(value = null) {
-    if (value === null) {
-      return this._response;
-    }
+  _res(value = null) {
+    this._log('ClientSubscription _res path=%s', this._path);
 
     this._response = value;
     this._bindResponse();
-
-    this._log('ClientSubscription _response path=%s', this._path);
 
     return this;
   }

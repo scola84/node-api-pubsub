@@ -50,7 +50,7 @@ export default class PubSub {
   }
 
   open() {
-    this._log('PubSub open con=%s',
+    this._log('PubSub open connection=%s',
       Boolean(this._connection));
 
     if (this._connection !== null) {
