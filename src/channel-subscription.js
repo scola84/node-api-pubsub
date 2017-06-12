@@ -65,7 +65,7 @@ export default class ChannelSubscription {
     return this;
   }
 
-  publish(data) {
+  publish(data = {}) {
     this._log('ChannelSubscription publish data=%j', data);
 
     this._response
