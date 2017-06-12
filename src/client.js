@@ -43,12 +43,14 @@ export default class Client extends EventEmitter {
     return this;
   }
 
-  publish(path, data) {
+  publish(path, data = {}) {
     this._log('Client publish path=%s data=%j', path, data);
 
-    this._subscriptions
-      .get(path)
-      .publish(data);
+    this._connection
+      .request()
+      .method('POST')
+      .path(path)
+      .end(data);
 
     return this;
   }
