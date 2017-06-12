@@ -61,16 +61,6 @@ export default class ClientSubscription {
     return this;
   }
 
-  publish(data) {
-    this._log('ClientSubscription publish data=%j', data);
-
-    this._connection
-      .request()
-      .method('POST')
-      .path(this._path)
-      .end(data);
-  }
-
   _bindConnection() {
     if (this._connection) {
       this._connection.on('close', this._handleClose);
@@ -152,8 +142,10 @@ export default class ClientSubscription {
   }
 
   _data(data) {
-    this._log('ClientSubscription _data  path=%s data=%j',
-      data, this._path);
+    this._log('ClientSubscription _data path=%s data=%j',
+      this._path, data);
+
+    this._client.emit(this._path, data);
     this._client.emit('publish', this._path, data);
   }
 
