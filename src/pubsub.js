@@ -57,4 +57,12 @@ export default class PubSub {
       this._connection.open();
     }
   }
+
+  publish(path, data) {
+    this._log('PubSub publish path=%s data=%j', path, data);
+
+    this
+      .channel(path)
+      .publish(data);
+  }
 }
