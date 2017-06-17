@@ -46,6 +46,10 @@ export default class Client extends EventEmitter {
   publish(path, data = {}) {
     this._log('Client publish path=%s data=%j', path, data);
 
+    if (this._connection.connected() === false) {
+      return this;
+    }
+
     this._connection
       .request()
       .method('POST')
