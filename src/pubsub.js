@@ -14,7 +14,11 @@ export default class PubSub {
   destroy() {
     this._log('PubSub destroy');
 
-    this._client.destroy();
+    this.close();
+
+    if (this._client) {
+      this._client.destroy();
+    }
 
     this._channels.forEach((channel) => {
       channel.destroy();
@@ -47,6 +51,15 @@ export default class PubSub {
 
     this._connection = value;
     return this;
+  }
+
+  close() {
+    this._log('PubSub close connection=%s',
+      Boolean(this._connection));
+
+    if (this._connection !== null) {
+      this._connection.close();
+    }
   }
 
   open() {
