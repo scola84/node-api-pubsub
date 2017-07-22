@@ -63,6 +63,7 @@ export default class ClientSubscription {
 
   _bindConnection() {
     if (this._connection) {
+      this._connection.setMaxListeners(this._connection.getMaxListeners() + 1);
       this._connection.on('close', this._handleClose);
       this._connection.on('open', this._handleOpen);
     }
@@ -70,6 +71,7 @@ export default class ClientSubscription {
 
   _unbindConnection() {
     if (this._connection) {
+      this._connection.setMaxListeners(this._connection.getMaxListeners() - 1);
       this._connection.removeListener('close', this._handleClose);
       this._connection.removeListener('open', this._handleOpen);
     }
@@ -77,6 +79,7 @@ export default class ClientSubscription {
 
   _bindRequest() {
     if (this._request) {
+      this._request.setMaxListeners(this._request.getMaxListeners() + 1);
       this._request.on('abort', this._handleAbort);
       this._request.on('error', this._handleError);
       this._request.on('response', this._handleResponse);
@@ -85,6 +88,7 @@ export default class ClientSubscription {
 
   _unbindRequest() {
     if (this._request) {
+      this._request.setMaxListeners(this._request.getMaxListeners() - 1);
       this._request.removeListener('abort', this._handleAbort);
       this._request.removeListener('error', this._handleError);
       this._request.removeListener('response', this._handleResponse);
@@ -93,6 +97,7 @@ export default class ClientSubscription {
 
   _bindResponse() {
     if (this._response) {
+      this._response.setMaxListeners(this._response.getMaxListeners() + 1);
       this._response.on('abort', this._handleAbort);
       this._response.on('data', this._handleData);
       this._response.on('error', this._handleError);
@@ -101,6 +106,7 @@ export default class ClientSubscription {
 
   _unbindResponse() {
     if (this._response) {
+      this._response.setMaxListeners(this._response.getMaxListeners() - 1);
       this._response.removeListener('abort', this._handleAbort);
       this._response.removeListener('data', this._handleData);
       this._response.removeListener('error', this._handleError);
