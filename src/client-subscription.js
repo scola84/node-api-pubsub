@@ -151,8 +151,7 @@ export default class ClientSubscription {
     this._log('ClientSubscription _data path=%s data=%j',
       this._path, data);
 
-    this._client.emit(this._path, data);
-    this._client.emit('publish', this._path, data);
+    this._client.emit(data.event, data.data);
   }
 
   _res(value = null) {
