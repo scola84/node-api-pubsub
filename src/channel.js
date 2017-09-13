@@ -1,9 +1,17 @@
 import { debuglog } from 'util';
 import ChannelSubscription from './channel-subscription';
+import FanOut from './policy/fanout';
+import RoundRobin from './policy/roundrobin';
+
+const policies = {
+  fo: FanOut,
+  rr: RoundRobin
+};
 
 export default class Channel {
   constructor() {
     this._log = debuglog('pubsub');
+    this._policies = {};
     this._subscriptions = new Map();
   }
 
@@ -55,8 +63,13 @@ export default class Channel {
     this._log('Channel publish data=%j #sub=%d',
       data, this._subscriptions.size);
 
-    this._subscriptions.forEach((subscription) => {
-      subscription.publish(data);
-    });
+    const policy = data.policy || 'fo';
+
+    if (typeof this._policies[policy] === 'undefined') {
+      this._policies[policy] = new policies[policy]();
+    }
+
+    this._policies[policy]
+      .publish(this._subscriptions, data);
   }
 }

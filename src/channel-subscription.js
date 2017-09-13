@@ -1,4 +1,5 @@
 import { debuglog } from 'util';
+
 export default class ChannelSubscription {
   constructor() {
     this._log = debuglog('pubsub');
