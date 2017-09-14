@@ -11,8 +11,17 @@ const policies = {
 export default class Channel {
   constructor() {
     this._log = debuglog('pubsub');
-    this._policies = {};
+    this._policy = null;
     this._subscriptions = new Map();
+  }
+
+  policy(value = null) {
+    if (value === null) {
+      return this._policy;
+    }
+
+    this._policy = new policies[value]();
+    return this;
   }
 
   destroy() {
@@ -63,13 +72,7 @@ export default class Channel {
     this._log('Channel publish data=%j #sub=%d',
       data, this._subscriptions.size);
 
-    const policy = data.policy || 'fo';
-
-    if (typeof this._policies[policy] === 'undefined') {
-      this._policies[policy] = new policies[policy]();
-    }
-
-    this._policies[policy]
+    this._policy
       .publish(this._subscriptions, data);
   }
 }

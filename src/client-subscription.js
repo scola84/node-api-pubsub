@@ -1,7 +1,12 @@
+import EventEmitter from 'eventemitter2';
 import { debuglog } from 'util';
 
-export default class ClientSubscription {
+export default class ClientSubscription extends EventEmitter {
   constructor() {
+    super({
+      wildcard: true
+    });
+
     this._log = debuglog('pubsub');
 
     this._client = null;
@@ -151,7 +156,7 @@ export default class ClientSubscription {
     this._log('ClientSubscription _data path=%s data=%j',
       this._path, data);
 
-    this._client.emit(data.event, data.data);
+    this.emit(data.event, data.data);
   }
 
   _res(value = null) {

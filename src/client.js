@@ -1,13 +1,8 @@
-import EventEmitter from 'eventemitter2';
 import { debuglog } from 'util';
 import ClientSubscription from './client-subscription';
 
-export default class Client extends EventEmitter {
+export default class Client {
   constructor() {
-    super({
-      wildcard: true
-    });
-
     this._log = debuglog('pubsub');
 
     this._connection = null;
@@ -34,21 +29,21 @@ export default class Client extends EventEmitter {
   }
 
   subscribe(path) {
-    const has = this._subscriptions.has(path);
+    this._log('Client subscribe path=%s has=%j', path);
 
-    this._log('Client subscribe path=%s has=%j', path, has);
+    let subscription = this._subscriptions.get(path);
 
-    if (has === true) {
-      return this;
+    if (subscription instanceof ClientSubscription === true) {
+      return subscription;
     }
 
-    const subscription = new ClientSubscription()
+    subscription = new ClientSubscription()
       .path(path)
       .client(this)
       .connection(this._connection);
 
     this._subscriptions.set(path, subscription);
-    return this;
+    return subscription;
   }
 
   publish(path, data = {}) {

@@ -1,3 +1,4 @@
+import ip from 'ip';
 import { debuglog } from 'util';
 
 export default class ChannelSubscription {
@@ -67,7 +68,12 @@ export default class ChannelSubscription {
   }
 
   publish(data = {}) {
-    this._log('ChannelSubscription publish data=%j', data);
+    this._log('ChannelSubscription publish data=%j id=%d',
+      data, this._id());
+
+    if (data.id && data.id !== this._id()) {
+      return this;
+    }
 
     this._response
       .status(200)
@@ -109,5 +115,9 @@ export default class ChannelSubscription {
       this._response.setMaxListeners(this._response.getMaxListeners() - 1);
       this._response.removeListener('error', this._handleError);
     }
+  }
+
+  _id() {
+    return ip.toLong(this._request.address().address);
   }
 }
