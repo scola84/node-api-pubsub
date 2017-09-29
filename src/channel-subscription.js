@@ -40,6 +40,10 @@ export default class ChannelSubscription {
       return this._request;
     }
 
+    if (value === this._request) {
+      return this;
+    }
+
     if (this._request) {
       this._unbindRequest();
       this._request.destroy();
@@ -54,6 +58,10 @@ export default class ChannelSubscription {
   response(value = null) {
     if (value === null) {
       return this._response;
+    }
+
+    if (value === this._response) {
+      return this;
     }
 
     if (this._response) {
@@ -81,6 +89,9 @@ export default class ChannelSubscription {
       .header('x-publish', 1)
       .header('x-total', false)
       .write(data);
+
+    this._response
+      .header('x-publish', false);
 
     return this;
   }
