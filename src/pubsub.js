@@ -35,6 +35,22 @@ export default class PubSub {
     return this._channels.get(path);
   }
 
+  fanout(path) {
+    if (this._channels.has(path) === false) {
+      this.channel(path).policy('fo');
+    }
+
+    return this.channel(path);
+  }
+
+  roundrobin(path) {
+    if (this._channels.has(path) === false) {
+      this.channel(path).policy('rr');
+    }
+
+    return this.channel(path);
+  }
+
   client() {
     if (this._client === null) {
       this._client = new Client();

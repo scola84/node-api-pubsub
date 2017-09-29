@@ -29,7 +29,7 @@ export default class Client {
   }
 
   subscribe(path) {
-    this._log('Client subscribe path=%s has=%j', path);
+    this._log('Client subscribe path=%s', path);
 
     let subscription = this._subscriptions.get(path);
 
