@@ -1,6 +1,6 @@
 export default function subscribe(pubsub) {
   return (request, response, next) => {
-    if (Number(request.header('x-more')) === 0) {
+    if (request.header('Connection') === 'close') {
       next();
       return;
     }
