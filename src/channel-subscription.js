@@ -86,12 +86,7 @@ export default class ChannelSubscription {
     this._response
       .status(200)
       .header('Etag', false)
-      .write({
-        meta: {
-          publish: true
-        },
-        data
-      });
+      .write(data);
 
     return this;
   }
