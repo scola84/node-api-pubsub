@@ -19,7 +19,8 @@ export default class ClientSubscription extends EventEmitter {
     this._handleClose = () => this._close();
     this._handleOpen = () => this._open();
 
-    this._handleAbort = () => this._abort();
+    this._handleEnd = () => this._close();
+    this._handleFinish = () => this._close();
     this._handleData = (d) => this._data(d);
     this._handleError = () => {};
     this._handleResponse = (r) => this._res(r);
@@ -85,7 +86,7 @@ export default class ClientSubscription extends EventEmitter {
   _bindRequest() {
     if (this._request) {
       this._request.setMaxListeners(this._request.getMaxListeners() + 1);
-      this._request.on('abort', this._handleAbort);
+      this._request.on('finish', this._handleFinish);
       this._request.on('error', this._handleError);
       this._request.on('response', this._handleResponse);
     }
@@ -94,7 +95,7 @@ export default class ClientSubscription extends EventEmitter {
   _unbindRequest() {
     if (this._request) {
       this._request.setMaxListeners(this._request.getMaxListeners() - 1);
-      this._request.removeListener('abort', this._handleAbort);
+      this._request.removeListener('finish', this._handleFinish);
       this._request.removeListener('error', this._handleError);
       this._request.removeListener('response', this._handleResponse);
     }
@@ -103,7 +104,7 @@ export default class ClientSubscription extends EventEmitter {
   _bindResponse() {
     if (this._response) {
       this._response.setMaxListeners(this._response.getMaxListeners() + 1);
-      this._response.on('abort', this._handleAbort);
+      this._response.on('end', this._handleEnd);
       this._response.on('data', this._handleData);
       this._response.on('error', this._handleError);
     }
@@ -112,7 +113,7 @@ export default class ClientSubscription extends EventEmitter {
   _unbindResponse() {
     if (this._response) {
       this._response.setMaxListeners(this._response.getMaxListeners() - 1);
-      this._response.removeListener('abort', this._handleAbort);
+      this._response.removeListener('end', this._handleEnd);
       this._response.removeListener('data', this._handleData);
       this._response.removeListener('error', this._handleError);
     }
@@ -120,7 +121,16 @@ export default class ClientSubscription extends EventEmitter {
 
   _close() {
     this._log('ClientSubscription _close path=%s', this._path);
-    this._abort();
+
+    if (this._request) {
+      this._unbindRequest();
+      this._request = null;
+    }
+
+    if (this._response) {
+      this._unbindResponse();
+      this._response = null;
+    }
   }
 
   _open() {
@@ -138,20 +148,6 @@ export default class ClientSubscription extends EventEmitter {
     this._request.write('');
   }
 
-  _abort() {
-    this._log('ClientSubscription _abort path=%s', this._path);
-
-    if (this._request) {
-      this._unbindRequest();
-      this._request = null;
-    }
-
-    if (this._response) {
-      this._unbindResponse();
-      this._response = null;
-    }
-  }
-
   _data(data) {
     this._log('ClientSubscription _data path=%s data=%j',
       this._path, data);
@@ -164,7 +160,5 @@ export default class ClientSubscription extends EventEmitter {
 
     this._response = value;
     this._bindResponse();
-
-    return this;
   }
 }

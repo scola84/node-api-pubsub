@@ -9,7 +9,6 @@ export default class ChannelSubscription {
     this._request = null;
     this._response = null;
 
-    this._handleAbort = () => this.destroy();
     this._handleEnd = () => this.destroy();
     this._handleError = () => this.destroy();
   }
@@ -94,7 +93,6 @@ export default class ChannelSubscription {
   _bindRequest() {
     if (this._request) {
       this._request.setMaxListeners(this._request.getMaxListeners() + 1);
-      this._request.on('abort', this._handleAbort);
       this._request.on('end', this._handleEnd);
       this._request.on('error', this._handleError);
     }
@@ -103,7 +101,6 @@ export default class ChannelSubscription {
   _unbindRequest() {
     if (this._request) {
       this._request.setMaxListeners(this._request.getMaxListeners() - 1);
-      this._request.removeListener('abort', this._handleAbort);
       this._request.removeListener('end', this._handleEnd);
       this._request.removeListener('error', this._handleError);
     }

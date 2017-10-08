@@ -9,6 +9,10 @@ export default function subscribe(pubsub) {
       .channel(request.path())
       .subscribe(request, response);
 
+    response
+      .status(200)
+      .write();
+
     next();
   };
 }
